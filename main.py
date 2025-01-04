@@ -90,25 +90,30 @@ class InterfaceBatailleNavale:
     def __init__(self, root):
         self.root = root
         self.root.title("Bataille Navale")
-        self.label_tour = tk.Label(root, text="Placement des navires")
+        self.root.configure(bg="lightgrey")  # Changer la couleur de fond de la fenêtre
+        
+        self.label_tour = tk.Label(root, text="Placement des navires", bg="lightgrey")
         self.label_tour.grid(row=0, column=0, columnspan=20)
         
-        self.frame_joueur = tk.Frame(root)
+        self.frame_joueur = tk.Frame(root, bg="#87CEEB")
         self.frame_joueur.grid(row=1, column=0, padx=10, pady=10)
         
-        self.frame_ordinateur = tk.Frame(root)
+        self.frame_ordinateur = tk.Frame(root, bg="#87CEEB")
         self.frame_ordinateur.grid(row=1, column=1, padx=10, pady=10)
         
-        self.grille_joueur = [[tk.Button(self.frame_joueur, width=2, height=1, command=lambda x=i, y=j: self.placer_navire_joueur(x, y)) for j in range(10)] for i in range(10)]
-        self.grille_ordinateur = [[tk.Button(self.frame_ordinateur, width=2, height=1, command=lambda x=i, y=j: self.tirer(x, y)) for j in range(10)] for i in range(10)]
+        self.grille_joueur = [[tk.Button(self.frame_joueur, width=2, height=1, bg="#87CEEB", command=lambda x=i, y=j: self.placer_navire_joueur(x, y)) for j in range(10)] for i in range(10)]
+        self.grille_ordinateur = [[tk.Button(self.frame_ordinateur, width=2, height=1, bg="#87CEEB", command=lambda x=i, y=j: self.tirer(x, y)) for j in range(10)] for i in range(10)]
         
         for i in range(10):
             for j in range(10):
                 self.grille_joueur[i][j].grid(row=i, column=j)
                 self.grille_ordinateur[i][j].grid(row=i, column=j)
         
-        self.bouton_commencer = tk.Button(root, text="Commencer le jeu", command=self.commencer_jeu, state="disabled")
-        self.bouton_commencer.grid(row=2, column=0, columnspan=20)
+        self.bouton_commencer = tk.Button(root, text="Commencer le jeu", command=self.commencer_jeu, state="disabled", bg="lightgrey")
+        self.bouton_commencer.grid(row=2, column=0, columnspan=20, pady=10, sticky="ew")
+        
+        self.bouton_recommencer = tk.Button(root, text="Recommencer la partie", command=self.nouvelle_partie, bg="lightgrey")
+        self.bouton_recommencer.grid(row=3, column=0, columnspan=20, pady=10, sticky="ew")
         
         self.orientation = "H"  # H pour horizontal, V pour vertical
         self.root.bind("<space>", self.changer_orientation)
@@ -123,8 +128,9 @@ class InterfaceBatailleNavale:
         self.navires_a_placer = [("Porte-avions", 5), ("Croiseur", 4), ("Destroyer", 3), ("Sous-marin", 2), ("Sous-marin", 2)]
         for i in range(10):
             for j in range(10):
-                self.grille_joueur[i][j].config(bg="SystemButtonFace")
-                self.grille_ordinateur[i][j].config(bg="SystemButtonFace", state="normal")
+                self.grille_joueur[i][j].config(bg="#87CEEB", text="")
+                self.grille_ordinateur[i][j].config(bg="#87CEEB", text="", state="normal")
+        self.bouton_commencer.config(state="disabled")
         self.placer_navires_joueur()
 
     def changer_orientation(self, event):
@@ -147,9 +153,9 @@ class InterfaceBatailleNavale:
             else:
                 positions = [(x + i, y) for i in range(self.navire_en_cours.taille)]
             
-            if all(0 <= pos[0] < 10 and 0 <= pos[1] < 10 and self.grille_joueur[pos[0]][pos[1]].cget('bg') == 'SystemButtonFace' for pos in positions):
+            if all(0 <= pos[0] < 10 and 0 <= pos[1] < 10 and self.grille_joueur[pos[0]][pos[1]].cget('bg') == '#87CEEB' for pos in positions):
                 for pos in positions:
-                    self.grille_joueur[pos[0]][pos[1]].config(bg='blue')
+                    self.grille_joueur[pos[0]][pos[1]].config(bg='darkgrey')
                 self.joueur.plateau.placer_navire(self.navire_en_cours, positions)
                 self.navires_a_placer.pop(0)
                 self.placer_navires_joueur()
