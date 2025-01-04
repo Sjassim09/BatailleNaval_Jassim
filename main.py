@@ -62,24 +62,37 @@ class Ordi(Joueur):
     def choix_tir(self):
         return randint(0, 9), randint(0, 9)
 
-# déclare la classe InterfaceBatailleNavale pour initialiser la fenêtre et les boutons
 class InterfaceBatailleNavale:
-    # déclare la classe InterfaceBatailleNavale pour initialiser la fenêtre et les boutons
     def __init__(self, root):
         self.root = root
         self.root.title("Bataille Navale")
         self.creer_interface()
-    # déclare la classe InterfaceBatailleNavale pour initialiser la fenêtre et les boutons
+
     def creer_interface(self):
-        self.canvas = tk.Canvas(self.root, width=400, height=400)
-        self.canvas.pack()
-        self.grille_joueur = [[tk.Button(self.root, width=3, height=1, command=lambda x=i, y=j: self.jouer_tour(x, y)) for j in range(10)] for i in range(10)]
+        frame = tk.Frame(self.root)
+        frame.pack()
+        
+        self.label_tour = tk.Label(frame, text="Tour du joueur", font=("Arial", 12))
+        self.label_tour.grid(row=0, column=0, columnspan=10)
+        
+        self.grille_joueur = [[tk.Button(frame, width=3, height=1, command=lambda x=i, y=j: self.jouer_tour(x, y)) for j in range(10)] for i in range(10)]
         for i in range(10):
             for j in range(10):
-                self.grille_joueur[i][j].grid(row=i, column=j)
-    # déclare la classe InterfaceBatailleNavale pour initialiser la fenêtre et les boutons
+                self.grille_joueur[i][j].grid(row=i+1, column=j)
+        
+        self.bouton_nouvelle_partie = tk.Button(self.root, text="Nouvelle Partie", command=self.nouvelle_partie)
+        self.bouton_nouvelle_partie.pack()
+    
     def jouer_tour(self, x, y):
         print(f"Tir en ({x}, {y})")
+        self.label_tour.config(text="Tour de l'ordinateur")
+    
+    def nouvelle_partie(self):
+        print("Nouvelle partie démarrée")
+        self.label_tour.config(text="Tour du joueur")
+        for i in range(10):
+            for j in range(10):
+                self.grille_joueur[i][j].config(bg="SystemButtonFace")
 
 # déclare la classe InterfaceBatailleNavale pour initialiser la fenêtre et les boutons
 if __name__ == "__main__":
