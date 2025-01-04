@@ -91,14 +91,13 @@ class InterfaceBatailleNavale:
         self.root = root
         self.root.title("Bataille Navale")
         self.label_tour = tk.Label(root, text="Placement des navires")
-        self.label_tour.grid(row=0, column=0, columnspan=10)
+        self.label_tour.grid(row=0, column=0, columnspan=20)
         
         self.frame_joueur = tk.Frame(root)
-        self.frame_joueur.grid(row=1, column=0, columnspan=10)
+        self.frame_joueur.grid(row=1, column=0, padx=10, pady=10)
         
         self.frame_ordinateur = tk.Frame(root)
-        self.frame_ordinateur.grid(row=1, column=0, columnspan=10)
-        self.frame_ordinateur.grid_forget()
+        self.frame_ordinateur.grid(row=1, column=1, padx=10, pady=10)
         
         self.grille_joueur = [[tk.Button(self.frame_joueur, width=2, height=1, command=lambda x=i, y=j: self.placer_navire_joueur(x, y)) for j in range(10)] for i in range(10)]
         self.grille_ordinateur = [[tk.Button(self.frame_ordinateur, width=2, height=1, command=lambda x=i, y=j: self.tirer(x, y)) for j in range(10)] for i in range(10)]
@@ -106,9 +105,10 @@ class InterfaceBatailleNavale:
         for i in range(10):
             for j in range(10):
                 self.grille_joueur[i][j].grid(row=i, column=j)
+                self.grille_ordinateur[i][j].grid(row=i, column=j)
         
-        self.bouton_commencer = tk.Button(root, text="Commencer le jeu", command=self.afficher_plateau_jeu, state="disabled")
-        self.bouton_commencer.grid(row=2, column=0, columnspan=10)
+        self.bouton_commencer = tk.Button(root, text="Commencer le jeu", command=self.commencer_jeu, state="disabled")
+        self.bouton_commencer.grid(row=2, column=0, columnspan=20)
         
         self.orientation = "H"  # H pour horizontal, V pour vertical
         self.root.bind("<space>", self.changer_orientation)
@@ -124,6 +124,7 @@ class InterfaceBatailleNavale:
         for i in range(10):
             for j in range(10):
                 self.grille_joueur[i][j].config(bg="SystemButtonFace")
+                self.grille_ordinateur[i][j].config(bg="SystemButtonFace", state="normal")
         self.placer_navires_joueur()
 
     def changer_orientation(self, event):
@@ -153,10 +154,14 @@ class InterfaceBatailleNavale:
                 self.navires_a_placer.pop(0)
                 self.placer_navires_joueur()
 
-    def afficher_plateau_jeu(self):
-        self.frame_joueur.grid_forget()
-        self.frame_ordinateur.grid(row=1, column=0, columnspan=10)
+    def commencer_jeu(self):
         self.label_tour.config(text="À vous de jouer !")
+        self.placer_navires_ordinateur()
+
+    def placer_navires_ordinateur(self):
+        for nom, taille in [("Porte-avions", 5), ("Croiseur", 4), ("Destroyer", 3), ("Sous-marin", 2), ("Sous-marin", 2)]:
+            navire = Navire(nom, taille)
+            self.ordinateur.plateau.placement_aleatoire(navire)
 
     def tirer(self, x, y):
         resultat = self.ordinateur.plateau.verifier_tir(x, y)
