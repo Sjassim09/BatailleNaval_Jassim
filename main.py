@@ -162,27 +162,27 @@ class InterfaceBatailleNavale: # Initialisation de la classe Interfacequi permet
             self.label_tour.config(text="Vous avez perdu !") # Affichage du message de fin de partie
             messagebox.showinfo("Fin de partie", "Vous avez perdu !") # Affichage de la boîte de dialogue
             self.desactiver_grilles() # Désactivation des grilles
-            return True
-        elif tous_navires_ordi_coules:
-            self.partie_terminee = True
-            self.label_tour.config(text="Vous avez gagné !")
-            messagebox.showinfo("Fin de partie", "Vous avez gagné !")
-            self.desactiver_grilles() 
-            return True
-        return False
+            return True # Retourne True
+        elif tous_navires_ordi_coules: # Si tous les navires de l'ordinateur sont coulés
+            self.partie_terminee = True # La partie est terminée
+            self.label_tour.config(text="Vous avez gagné !") # Affichage du message de fin de partie
+            messagebox.showinfo("Fin de partie", "Vous avez gagné !") # Affichage de la boîte de dialogue   
+            self.desactiver_grilles()  # Désactivation des grilles
+            return True 
+        return False 
 
-    def desactiver_grilles(self):
+    def desactiver_grilles(self): # Méthode qui permet de désactiver les grilles
         for i in range(10):
-            for j in range(10):
-                self.grille_joueur[i][j].config(state="disabled")
-                self.grille_ordinateur[i][j].config(state="disabled")
+            for j in range(10): 
+                self.grille_joueur[i][j].config(state="disabled") # Désactivation des boutons de la grille du joueur
+                self.grille_ordinateur[i][j].config(state="disabled") # Désactivation des boutons de la grille de l'ordinateur
     # Méthode qui permet de commencer une nouvelle partie
-    def nouvelle_partie(self):
-        self.partie_terminee = False
-        self.label_tour.config(text="Placement des navires")
-        self.joueur = Joueur("Joueur")
-        self.ordinateur = Ordinateur()
-        self.navires_a_placer = [
+    def nouvelle_partie(self): 
+        self.partie_terminee = False # La partie n'est pas terminée
+        self.label_tour.config(text="Placement des navires") # Affichage du message de placement des navires
+        self.joueur = Joueur("Joueur") # Initialisation du joueur
+        self.ordinateur = Ordinateur() # Initialisation de l'ordinateur
+        self.navires_a_placer = [ # Liste des navires à placer
             ("Porte-avions", 5),
             ("Croiseur", 4),
             ("Destroyer", 3),
@@ -192,48 +192,48 @@ class InterfaceBatailleNavale: # Initialisation de la classe Interfacequi permet
         ]
         for i in range(10):
             for j in range(10):
-                self.grille_joueur[i][j].config(bg="#87CEEB", text="", state="normal")
-                self.grille_ordinateur[i][j].config(bg="#87CEEB", text="", state="normal")
-        self.bouton_commencer.config(state="disabled")
-        self.tour_joueur = True
-        self.placer_navires_joueur()
+                self.grille_joueur[i][j].config(bg="#87CEEB", text="", state="normal") # Initialisation de la grille du joueur
+                self.grille_ordinateur[i][j].config(bg="#87CEEB", text="", state="normal") # Initialisation de la grille de l'ordinate
+        self.bouton_commencer.config(state="disabled") # Désactivation du bouton commencer
+        self.tour_joueur = True # Initialisation du tour du joueur
+        self.placer_navires_joueur() # Appel de la méthode placer_navires_joueur
     # Méthode qui permet de changer l'orientation des navires
-    def changer_orientation(self, event):
-        self.orientation = "V" if self.orientation == "H" else "H"
-        if self.navires_a_placer:
-            nom, taille = self.navires_a_placer[0]
-            self.label_tour.config(text=f"Placez votre {nom} (taille {taille}) - "
-                                      f"Orientation: {'Verticale' if self.orientation == 'V' else 'Horizontale'}")
+    def changer_orientation(self, event): # Méthode qui permet de changer l'orientation des navires
+        self.orientation = "V" if self.orientation == "H" else "H" # Changement de l'orientation
+        if self.navires_a_placer: # Si des navires sont à placer
+            nom, taille = self.navires_a_placer[0] # Récupération du nom et de la taille du navire
+            self.label_tour.config(text=f"Placez votre {nom} (taille {taille}) - " # Affichage du message de placement
+                                      f"Orientation: {'Verticale' if self.orientation == 'V' else 'Horizontale'}") # Affichage de l'orientation
     # Méthode qui permet de placer les navires du joueur
-    def placer_navires_joueur(self):
-        if self.navires_a_placer:
-            nom, taille = self.navires_a_placer[0]
-            self.navire_en_cours = Navire(nom, taille)
-            self.label_tour.config(text=f"Placez votre {nom} (taille {taille}) - "
-                                      f"Orientation: {'Horizontale' if self.orientation == 'H' else 'Verticale'}")
+    def placer_navires_joueur(self): 
+        if self.navires_a_placer: # Si des navires sont à placer
+            nom, taille = self.navires_a_placer[0] # Récupération du nom et de la taille du navire
+            self.navire_en_cours = Navire(nom, taille) # Initialisation du navire en cours
+            self.label_tour.config(text=f"Placez votre {nom} (taille {taille}) - " # Affichage du message de placement
+                                      f"Orientation: {'Horizontale' if self.orientation == 'H' else 'Verticale'}") # Affichage de l'orientation
         else:
-            self.label_tour.config(text="Tous les navires sont placés !")
-            self.bouton_commencer.config(state="normal")
-    def placer_navire_joueur(self, x, y):
-        if self.navire_en_cours:
-            if self.orientation == "H":
-                positions = [(x, y + i) for i in range(self.navire_en_cours.taille)]
-            else:
-                positions = [(x + i, y) for i in range(self.navire_en_cours.taille)]
+            self.label_tour.config(text="Tous les navires sont placés !") # Affichage du message de fin de placement
+            self.bouton_commencer.config(state="normal") # Activation du bouton commencer
+    def placer_navire_joueur(self, x, y): # Méthode qui permet de placer un navire sur la grille du joueur
+        if self.navire_en_cours: # Si un navire est en cours de placement
+            if self.orientation == "H": # Si l'orientation est horizontale
+                positions = [(x, y + i) for i in range(self.navire_en_cours.taille)] # Création de la liste des positions
+            else: # Si l'orientation est verticale
+                positions = [(x + i, y) for i in range(self.navire_en_cours.taille)] # Création de la liste des positions
             
             valide = True
-            for pos_x, pos_y in positions:
-                if not (0 <= pos_x < 10 and 0 <= pos_y < 10):
-                    valide = False
+            for pos_x, pos_y in positions: # Pour chaque position dans la liste des positions
+                if not (0 <= pos_x < 10 and 0 <= pos_y < 10): # Si la position n'est pas dans la grille
+                    valide = False # La position n'est pas valide
+                    break 
+                if self.grille_joueur[pos_x][pos_y].cget('bg') != '#87CEEB': # Si la position n'est pas vide
+                    valide = False # La position n'est pas valide
                     break
-                if self.grille_joueur[pos_x][pos_y].cget('bg') != '#87CEEB':
-                    valide = False
-                    break
-                for dx in [-1, 0, 1]:
-                    for dy in [-1, 0, 1]:
-                        nx, ny = pos_x + dx, pos_y + dy
-                        if 0 <= nx < 10 and 0 <= ny < 10 and self.grille_joueur[nx][ny].cget('bg') != '#87CEEB':
-                            valide = False
+                for dx in [-1, 0, 1]: # Pour chaque déplacement en x
+                    for dy in [-1, 0, 1]: # Pour chaque déplacement en y
+                        nx, ny = pos_x + dx, pos_y + dy # Calcul des nouvelles coordonnées
+                        if 0 <= nx < 10 and 0 <= ny < 10 and self.grille_joueur[nx][ny].cget('bg') != '#87CEEB': # Si la nouvelle position n'est pas vide
+                            valide = False # La position n'est pas valide
                             break
                     if not valide:
                         break
@@ -242,71 +242,71 @@ class InterfaceBatailleNavale: # Initialisation de la classe Interfacequi permet
             
             if valide:
                 for pos in positions:
-                    self.grille_joueur[pos[0]][pos[1]].config(bg='darkgrey')
-                self.joueur.plateau.placer_navire(self.navire_en_cours, positions)
-                self.navires_a_placer.pop(0)
-                self.placer_navires_joueur()
+                    self.grille_joueur[pos[0]][pos[1]].config(bg='darkgrey') # Changement de couleur de la case
+                self.joueur.plateau.placer_navire(self.navire_en_cours, positions) # Placement du navire sur la grille du joueur
+                self.navires_a_placer.pop(0) # Suppression du navire de la liste des navires à placer
+                self.placer_navires_joueur() # Appel de la méthode placer_navires_joueur
 
     # Méthode qui permet de commencer le jeu
     def commencer_jeu(self):
-        self.label_tour.config(text="À vous de jouer !")
-        self.bouton_commencer.config(state="disabled")
+        self.label_tour.config(text="À vous de jouer !") # Affichage du message de début de partie
+        self.bouton_commencer.config(state="disabled") # Désactivation du bouton commencer
 
     # Méthode qui permet au joueur de tirer sur la grille de l'ordinateur
     def tirer(self, x, y):
         if self.partie_terminee:
             return
-        if self.tour_joueur and self.grille_ordinateur[x][y].cget('bg') not in ['red', 'darkblue', 'black']:
-            resultat = self.joueur.tirer(self.ordinateur, x, y)
-            if resultat == "Touché" or resultat == "Coulé":
-                self.grille_ordinateur[x][y].config(bg='red')
-                if resultat == "Coulé":
-                    navire = self.ordinateur.plateau.get_navire(x, y)
+        if self.tour_joueur and self.grille_ordinateur[x][y].cget('bg') not in ['red', 'darkblue', 'black']: # Si c'est le tour du joueur et que la case n'est pas déjà touchée
+            resultat = self.joueur.tirer(self.ordinateur, x, y)  # Appel de la méthode tirer
+            if resultat == "Touché" or resultat == "Coulé": 
+                self.grille_ordinateur[x][y].config(bg='red') # Changement de couleur de la case
+                if resultat == "Coulé": 
+                    navire = self.ordinateur.plateau.get_navire(x, y) # Récupération du navire touché
                     if navire:
-                        for pos in navire.positions:
-                            self.grille_ordinateur[pos[0]][pos[1]].config(bg='black')
-                self.label_tour.config(text=f"{resultat} !")
-                if self.verifier_fin_partie():
+                        for pos in navire.positions: # Pour chaque position dans la liste des positions
+                            self.grille_ordinateur[pos[0]][pos[1]].config(bg='black') # Changement de couleur de la case
+                self.label_tour.config(text=f"{resultat} !") # Affichage du message de tir réussi
+                if self.verifier_fin_partie(): # Appel de la méthode verifier_fin_partie
                     return
             else:
-                self.grille_ordinateur[x][y].config(bg='darkblue')
-                self.label_tour.config(text="Manqué !")
-                self.tour_joueur = False
-                self.root.after(1000, self.tour_ordinateur)
+                self.grille_ordinateur[x][y].config(bg='darkblue')  # Changement de couleur de la case
+                self.label_tour.config(text="Manqué !")  # Affichage du message de tir raté
+                self.tour_joueur = False # Changement de tour 
+                self.root.after(1000, self.tour_ordinateur) # Appel de la méthode tour_ordinateur
 
     # Méthode qui permet à l'ordinateur de jouer
-    def tour_ordinateur(self):
-        if self.partie_terminee:
+    def tour_ordinateur(self): # Méthode qui permet à l'ordinateur de jouer
+        if self.partie_terminee: # Si la partie est terminée
             return
-        if not self.tour_joueur:
-            x, y = randint(0, 9), randint(0, 9)
-            while self.grille_joueur[x][y].cget('bg') in ['red', 'darkblue', 'black']:
-                x, y = randint(0, 9), randint(0, 9)
+        if not self.tour_joueur: # Si ce n'est pas le tour du joueur
+            x, y = randint(0, 9), randint(0, 9) # Génération aléatoire des coordonnées x et y
+            while self.grille_joueur[x][y].cget('bg') in ['red', 'darkblue', 'black']: # Tant que la case est déjà touchée  
+                x, y = randint(0, 9), randint(0, 9)  # Génération aléatoire des coordonnées x et y
             
-            resultat = self.ordinateur.tirer(self.joueur, x, y)
-            if resultat == "Touché" or resultat == "Coulé":
-                self.grille_joueur[x][y].config(bg='red')
-                if resultat == "Coulé":
-                    navire = self.joueur.plateau.get_navire(x, y)
+            resultat = self.ordinateur.tirer(self.joueur, x, y) # Appel de la méthode tirer
+            if resultat == "Touché" or resultat == "Coulé": # Si le tir est réussi ou coulé
+                self.grille_joueur[x][y].config(bg='red') # Changement de couleur de la case
+                if resultat == "Coulé": 
+                    navire = self.joueur.plateau.get_navire(x, y) # Récupération du navire touché
                     if navire:
-                        for pos in navire.positions:
-                            self.grille_joueur[pos[0]][pos[1]].config(bg='black')
-                self.label_tour.config(text=f"L'ordinateur a {resultat.lower()} un navire !")
+                        for pos in navire.positions: # Pour chaque position dans la liste des positions
+                            self.grille_joueur[pos[0]][pos[1]].config(bg='black') # Changement de couleur de la case
+                self.label_tour.config(text=f"L'ordinateur a {resultat.lower()} un navire !") # Affichage du message de tir réussi
                 
-                if self.verifier_fin_partie():
+                if self.verifier_fin_partie(): # Appel de la méthode verifier_fin_partie
                     return
                 
                 if resultat != "Coulé":
-                    self.root.after(1000, self.tour_ordinateur)
+                    self.root.after(1000, self.tour_ordinateur) # Appel de la méthode tour_ordinateur
                 else:
-                    self.tour_joueur = True
+                    self.tour_joueur = True # Changement de tour
             else:
-                self.grille_joueur[x][y].config(bg='darkblue')
-                self.label_tour.config(text="L'ordinateur a manqué !")
-                self.tour_joueur = True
+                self.grille_joueur[x][y].config(bg='darkblue') # Changement de couleur de la case
+                self.label_tour.config(text="L'ordinateur a manqué !") # Affichage du message de tir raté
+                self.tour_joueur = True # Changement de tour
 
 # Lancement de l'interface graphique    
 if __name__ == "__main__":
-    root = tk.Tk()
-    app = InterfaceBatailleNavale(root)
-    root.mainloop()
+    root = tk.Tk() # Création de la fenêtre principale
+    app = InterfaceBatailleNavale(root) # Création de l'interface graphique
+    root.mainloop() # Lancement de la boucle principale
